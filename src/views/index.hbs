@@ -1,0 +1,31 @@
+{{> head title="Home"}}
+<form method="POST" action="/posts/new">
+  <div class="md:px-20">
+    <div class=" rounded-md px-6 py-4 max-w-2xl mx-auto">
+      <div class="space-y-4">
+        <div>
+          <label for="description" class="block mb-2 text-lg font-serif">Postea algo😎😅:</label>
+          <textarea id="description" cols="30" rows="2" placeholder="escribe algo aquí" class="w-full font-serif  p-4 text-gray-200 bg-slate-800 outline-none rounded-md" 
+          name="description"
+          ></textarea>
+        </div>
+        <button class=" px-6 py-2 mx-auto block rounded-md text-lg font-semibold text-indigo-100 bg-indigo-600" type="submit">Publicar Post</button>
+      </div>
+    </div>
+  </div>
+</form>
+
+<section class="min-h-screen md:px-40  ">
+    {{#each allPosts }}
+        <article class="bg-slate-800 rounded p-4 mb-4">
+                <div class="flex align-items justify-between">
+                    <p class="text-lg font-semibold capitalize text-lg mb-2">{{ username }}</p>
+                <p> {{ createdAt }}</p>
+                </div>
+            <p class="text-2xl">{{ description }}</p>
+        </article>
+    {{/each}}
+</section>
+
+
+{{> footer }}
