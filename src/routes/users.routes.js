@@ -9,6 +9,7 @@ const router = Router();
 
 router.get("/", isAuth, async (req, res) => {
     const user = req.user;
+    const users = await User.find();
     // I found all the posts a add the username
     const posts = await Post.find().lean();
     const allPosts = await Promise.all(
@@ -27,25 +28,17 @@ router.get("/", isAuth, async (req, res) => {
 
     res.render("index", {
         allPosts,
+        users,
         user,
+        username: user.username,
     });
 });
 
 // Show view
-router.get(
-    "/login",
-    (req, res, next) => {
-        if (req.isAuthenticated()) {
-            res.redirect("/");
-            return;
-        }
-        next();
-    },
-    (req, res) => {
-        // mostrar el formulario del login
-        res.render("login");
-    }
-);
+router.get("/login", (req, res) => {
+    // mostrar el formulario del login
+    res.render("login");
+});
 
 // Do an Action
 router.post(
@@ -67,8 +60,6 @@ router.get("/signup", (req, res) => {
 router.post("/signup", async (req, res) => {
     const { username, password } = req.body;
 
-    // console.log(data);
-
     if (!username || !password) return res.redirect("/signup");
 
     const salt = await bcrypt.genSalt();
@@ -86,11 +77,14 @@ router.post("/signup", async (req, res) => {
 
 // show view
 
-router.get("/:id", isAuth, async (req, res) => {
+router.get("/:id", async (req, res) => {
     const { username } = req.user;
 
+    if (!username) return res.redirect("/");
+
     const user = await User.findOne({ username }).lean();
-    console.log(user);
+
+    console.log(user, "id🏚️🏚️");
     if (!user) {
         res.redirect("/");
     }
